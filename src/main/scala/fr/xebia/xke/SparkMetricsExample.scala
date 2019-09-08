@@ -5,6 +5,10 @@ import org.apache.spark.sql.{Row, SparkSession}
 import org.apache.spark.ml.regression.LinearRegression
 import org.apache.spark.ml.feature.VectorAssembler
 
+import org.apache.spark.groupon.metrics.{SparkCounter, UserMetricsSystem}
+import org.apache.spark.scheduler.{SparkListener, SparkListenerTaskEnd, SparkListenerTaskStart}
+import org.apache.spark.sql.SparkSession
+
 import scala.util.Random
 
 object SparkMetricsExample {
@@ -13,10 +17,8 @@ object SparkMetricsExample {
     implicit val spark = SparkSession.builder()
       .appName(APP_NAME)
       .config("spark.metrics.namespace", APP_NAME)
-      .config("spark.metrics.properties", "metrics.properties")
       .getOrCreate()
 
-    Metrics.add
     val numPartition = 1000
     val rowByPartition = 1000000L
     val lowerBound = -1000
