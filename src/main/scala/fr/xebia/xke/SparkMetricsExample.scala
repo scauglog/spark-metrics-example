@@ -10,12 +10,13 @@ import scala.util.Random
 object SparkMetricsExample {
   val APP_NAME = "spark-metrics-example"
   def main(args: Array[String]): Unit = {
-    val spark = SparkSession.builder()
+    implicit val spark = SparkSession.builder()
       .appName(APP_NAME)
       .config("spark.metrics.namespace", APP_NAME)
       .config("spark.metrics.properties", "metrics.properties")
       .getOrCreate()
 
+    Metrics.add
     val numPartition = 1000
     val rowByPartition = 1000000L
     val lowerBound = -1000
@@ -51,7 +52,6 @@ object SparkMetricsExample {
 
     val lrModel = lr.fit(training)
 
-    spark.stop()
     // Print the coefficients and intercept for linear regression
     println("######################################################################################################")
     println(s"Coefficients: ${lrModel.coefficients} Intercept: ${lrModel.intercept}")
@@ -66,6 +66,7 @@ object SparkMetricsExample {
 
 
     println("__--__--'' done ''--__--__")
+    spark.stop()
 
   }
 }
